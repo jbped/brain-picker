@@ -1,5 +1,5 @@
 // Link JS to HTML Elements
-var timerDisplaySpanEl = document.querySelector('#time-display');
+var timerDisplayEl = document.querySelector('#timer-display');
 
 // Set Score Values
 scoreTime = 60;
@@ -39,4 +39,18 @@ var questionArr =[
         2: "Leet",
         3: "Camel Case"
     }
-]
+];
+
+var quizTimer = setInterval(function(){
+    if(scoreTime > 1) {
+        timerDisplayEl.textContent = scoreTime + " seconds";
+        scoreTime--;
+    } else if (scoreTime === 1) {
+        timerDisplayEl.textContent = scoreTime + " second";
+        scoreTime--;
+    } else {
+        clearInterval(quizTimer)
+        timerDisplayEl.textContent = scoreTime + " seconds";
+    }
+
+},1000)
