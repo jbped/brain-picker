@@ -1,5 +1,6 @@
 // Link JS to HTML Elements
 var timerDisplayEl = document.querySelector('#timer-display');
+var startBtnEl = document.querySelector('#start-btn')
 
 // Set Score Values
 scoreTime = 60;
@@ -41,16 +42,23 @@ var questionArr =[
     }
 ];
 
-var quizTimer = setInterval(function(){
-    if(scoreTime > 1) {
-        timerDisplayEl.textContent = scoreTime + " seconds";
-        scoreTime--;
-    } else if (scoreTime === 1) {
-        timerDisplayEl.textContent = scoreTime + " second";
-        scoreTime--;
-    } else {
-        clearInterval(quizTimer)
-        timerDisplayEl.textContent = scoreTime + " seconds";
-    }
+var startQuiz = function() {
+    var quizTimer = setInterval(function(){
+        if(scoreTime > 1) {
+            timerDisplayEl.textContent = scoreTime + " seconds";
+            scoreTime--;
+        } else if (scoreTime === 1) {
+            timerDisplayEl.textContent = scoreTime + " second";
+            scoreTime--;
+        } else {
+            clearInterval(quizTimer)
+            timerDisplayEl.textContent = scoreTime + " seconds";
+        }
+    
+    },1000)
+}
 
-},1000)
+startBtnEl.addEventListener("click",function(){
+    console.log("click");
+    startQuiz();
+});
