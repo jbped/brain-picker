@@ -54,7 +54,6 @@ var startQuiz = function() {
             clearInterval(quizTimer)
             timerDisplayEl.textContent = scoreTime + " seconds";
         }
-    
     },1000)
 }
 
