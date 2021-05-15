@@ -48,25 +48,32 @@ var questionArr = [
     }
 ];
 
-// var showQuestion = function() {
+var showQuestion = function() {
 
 
-//     question = questionArr[currentQuestion].question
-//     mainTopTitle.textContent = ''
-//     mainTopTitle.textContent = questionArr[currentQuestion].question
-//     console.log(questionArr[currentQuestion].question)
-// }
+    question = questionArr[currentQuestion].question
+    mainTopTitle.textContent = ''
+    mainTopTitle.textContent = questionArr[currentQuestion].question
+    console.log(questionArr[currentQuestion].question)
+}
 
 var generateButtons = function () {
     // Create button div container for the generated buttons
     var buttonHolderEl = document.createElement('div');
+        // Add class to generated div
         buttonHolderEl.className = "button-holder";
+    // Add div to the correct element main-center
     mainCenterEl.appendChild(buttonHolderEl);
 
+    // For loop that dynamically creates buttons === answer options
     for (var i = 0; i < (Object.keys(questionArr[currentQuestion]).length - 2); i++) {
+        // create button element
         var createButton = document.createElement('button');
+        // Add corresponding answer option as button text
         createButton.textContent = questionArr[currentQuestion][i];
+        // Set buttonID to be the corresponding answer option used to verify answer
         createButton.setAttribute("buttonID", i)
+        // Add button to the buttonHolder div created above
         buttonHolderEl.appendChild(createButton);
    }
 }
