@@ -71,6 +71,11 @@ var generateButtons = function () {
    }
 }
 
+var removeButtons = function () {
+    var selectBtnDiv = document.querySelector(".button-holder");
+    selectBtnDiv.remove();
+}
+
 // var questionLogic = function (){
 //     for (var i = 0; i < questionArr.length; i++) {
 //        var questionAnswer = function () {
