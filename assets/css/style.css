@@ -35,3 +35,9 @@ main {
     height: 100%;
     margin:auto;
 }
+
+.button-holder {
+    margin: 1rem 0;
+    display: flex;
+    flex-flow: column;
+}

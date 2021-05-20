@@ -5,6 +5,7 @@ var mainTopTitle = document.querySelector('#main-top-title')
 var mainCenterEl = document.querySelector('#main-center');
 var mainBottomEl = document.querySelector('#main-bottom');
 var startBtnEl = document.querySelector('#start-btn');
+var flavorTextEl = document.querySelector('#flavor-text');
 
 // Set Score Values
 scoreTime = 60;
@@ -48,15 +49,42 @@ var questionArr = [
     }
 ];
 
+var quizPrep = function() {
+    flavorTextEl.textContent = "";
+    startBtnEl.remove();
+}
+
+var navBtnDiv = function () {
+    var navBtnDiv = document.createElement("div");
+        navBtnDiv.setAttribute("id", "nav-btn-div");
+        navBtnDiv.className = "nav-btn-div";
+    
+    mainBottomEl.appendChild(navBtnDiv);
+}
+
+var quitBtn = function() {
+    var createQuitBtn = document.createElement('button');
+    createQuitBtn.textContent = "Quit"
+    createQuitBtn.setAttribute("id","next-btn");
+    navBtnDivEl = document.getElementById("nav-btn-div");
+    navBtnDivEl.appendChild(createQuitBtn);
+}
+var nextBtn = function() {
+    var createNextBtn = document.createElement('button');
+    createNextBtn.textContent = "Next"
+    createNextBtn.setAttribute("id","next-btn");
+    navBtnDivEl = document.getElementById("nav-btn-div");
+    navBtnDivEl.appendChild(createNextBtn);
+}
+
 var showQuestion = function() {
-
-
     question = questionArr[currentQuestion].question
-    mainTopTitle.textContent = ''
+    // mainTopTitle.textContent = ''
     mainTopTitle.textContent = questionArr[currentQuestion].question
     console.log(questionArr[currentQuestion].question)
 }
 
+// Generate Answer Buttons for the Current Question
 var generateButtons = function () {
     // Create button div container for the generated buttons
     var buttonHolderEl = document.createElement('div');
@@ -72,50 +100,79 @@ var generateButtons = function () {
         // Add corresponding answer option as button text
         createButton.textContent = questionArr[currentQuestion][i];
         // Set buttonID to be the corresponding answer option used to verify answer
-        createButton.setAttribute("buttonID", i)
+        createButton.setAttribute("buttonId", i);
+        createButton.className = "question-btn";
+        questionBtnEl = document.querySelector(".question-btn");
         // Add button to the buttonHolder div created above
         buttonHolderEl.appendChild(createButton);
    }
 }
 
+// To be used upon clicking the Next button in the quiz, it will remove the previous generated answer buttons
 var removeButtons = function () {
     var selectBtnDiv = document.querySelector(".button-holder");
     selectBtnDiv.remove();
 }
 
-// var questionLogic = function (){
-//     for (var i = 0; i < questionArr.length; i++) {
-//        var questionAnswer = function () {
-//            questionEl.textContent = questionArr[i].q
+// Start Timer
+var quizTimer = function(){
+    setInterval(function(){
+        if(scoreTime > 1) {
+            timerDisplayEl.textContent = scoreTime + " seconds";
+            scoreTime--;
+        } else if (scoreTime === 1) {
+            timerDisplayEl.textContent = scoreTime + " second";
+            scoreTime--;
+        } else {
+            clearInterval(quizTimer)
+            timerDisplayEl.textContent = scoreTime + " seconds";
+        }
+    },1000)
+};
 
-//        } 
-
-//     }
+// var questionClick = function(){
+//     questionBtn = document.querySelector(".question-btn")
+//     questionBtn.addEventListener("click",function(event){
+//     target = event.target.getAttribute("buttonid");
+//     console.log(target)
+//     return target;
+//     })
 // }
 
-// Start Timer
-var quizTimer = setInterval(function(){
-    if(scoreTime > 1) {
-        timerDisplayEl.textContent = scoreTime + " seconds";
-        scoreTime--;
-    } else if (scoreTime === 1) {
-        timerDisplayEl.textContent = scoreTime + " second";
-        scoreTime--;
-    } else {
-        clearInterval(quizTimer)
-        timerDisplayEl.textContent = scoreTime + " seconds";
-    }
-},1000)
-
 var startQuiz = function() {
-
-    
-
+    quizPrep();
+    quizTimer();
+    navBtnDiv();
+    quitBtn();
+    nextBtn();
     // Generate Questions
-
+    showQuestion();
     // Generate Buttons
-
+    generateButtons();
     // Correct vs Wrong Answer Logic
+    // var questionListener = function () {
+    //     document.querySelector(".question-btn")
+    //     document.addEventListener("click",function(event){
+    //         target = event.target.getAttribute("buttonid");
+    //     return target;
+    //     })
+    // }
+
+    var questionBtns = document.querySelector(".question-btn");
+    // var questionBtnId = document.querySelector("buttonid")
+    questionBtns.onclick = function(event) {
+        // target = event.target.matches(".question-btn");
+        target = event.target.getAttribute("buttonid");
+        console.log(target)
+    }
+            // console.log(questionListener)
+        
+        // if (questionClick === questionArr[currentQuestion].answer) {
+        //     console.log("correct")
+        // }
+        // else {
+        //     console.log("incorrect")
+        // }
 }
 
 startBtnEl.addEventListener("click",function(){
