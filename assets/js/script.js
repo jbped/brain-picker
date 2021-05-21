@@ -7,6 +7,10 @@ var mainBottomEl = document.querySelector('#main-bottom');
 var startBtnEl = document.querySelector('#start-btn');
 var flavorTextEl = document.querySelector('#flavor-text');
 
+var btnHolder = document.querySelector(".button-holder");
+var questionBtnEl = document.querySelectorAll(".question-btn")
+
+
 // Set Score Values
 scoreTime = 60;
 scoreAnswers = 0;
@@ -20,7 +24,8 @@ var questionArr = [
         0: "a semi-colon ';'",
         1: "a comma ','",
         2: "a space ' '",
-        3: "double or single quotes"
+        3: "double or single quotes",
+        4: "Here is another answer"
 
     },
     {
@@ -49,50 +54,62 @@ var questionArr = [
     }
 ];
 
+// Clears content and buttons to prepare page for quiz layout
 var quizPrep = function() {
     flavorTextEl.textContent = "";
     startBtnEl.remove();
 }
 
+// Create div for quit and next buttons
 var navBtnDiv = function () {
     var navBtnDiv = document.createElement("div");
         navBtnDiv.setAttribute("id", "nav-btn-div");
         navBtnDiv.className = "nav-btn-div";
-    
     mainBottomEl.appendChild(navBtnDiv);
 }
 
+// Create quit button (quit quiz)
 var quitBtn = function() {
     var createQuitBtn = document.createElement('button');
     createQuitBtn.textContent = "Quit"
-    createQuitBtn.setAttribute("id","next-btn");
+    createQuitBtn.setAttribute("id","quit-btn");
     navBtnDivEl = document.getElementById("nav-btn-div");
     navBtnDivEl.appendChild(createQuitBtn);
 }
+
+// create next button (progress to next page)
 var nextBtn = function() {
     var createNextBtn = document.createElement('button');
     createNextBtn.textContent = "Next"
-    createNextBtn.setAttribute("id","next-btn");
+    createNextBtn.id = "next-btn";
     navBtnDivEl = document.getElementById("nav-btn-div");
+    createNextBtn.addEventListener("click", function(){
+        currentQuestion++;
+        showQuestion();
+        generateButtons();
+        removeButtons();
+    })
     navBtnDivEl.appendChild(createNextBtn);
 }
 
+// Populates the current quiz question
 var showQuestion = function() {
+    // check currentQuestion value, populate corresponding questionArr item
     question = questionArr[currentQuestion].question
     // mainTopTitle.textContent = ''
     mainTopTitle.textContent = questionArr[currentQuestion].question
-    console.log(questionArr[currentQuestion].question)
 }
 
 // Generate Answer Buttons for the Current Question
 var generateButtons = function () {
     // Create button div container for the generated buttons
     var buttonHolderEl = document.createElement('div');
-        // Add class to generated div
-        buttonHolderEl.className = "button-holder";
+    // Add class to generated div
+    buttonHolderEl.className = "button-holder";
+    buttonHolderEl.id = "btn-holder";
     // Add div to the correct element main-center
     mainCenterEl.appendChild(buttonHolderEl);
-
+    
     // For loop that dynamically creates buttons === answer options
     for (var i = 0; i < (Object.keys(questionArr[currentQuestion]).length - 2); i++) {
         // create button element
@@ -102,17 +119,18 @@ var generateButtons = function () {
         // Set buttonID to be the corresponding answer option used to verify answer
         createButton.setAttribute("buttonId", i);
         createButton.className = "question-btn";
-        questionBtnEl = document.querySelector(".question-btn");
         // Add button to the buttonHolder div created above
         buttonHolderEl.appendChild(createButton);
-   }
-}
+    }
+};
 
 // To be used upon clicking the Next button in the quiz, it will remove the previous generated answer buttons
 var removeButtons = function () {
     var selectBtnDiv = document.querySelector(".button-holder");
     selectBtnDiv.remove();
-}
+    var nextBtnEl = document.querySelector("#next-btn");
+    nextBtnEl.remove();
+};
 
 // Start Timer
 var quizTimer = function(){
@@ -130,52 +148,52 @@ var quizTimer = function(){
     },1000)
 };
 
-// var questionClick = function(){
-//     questionBtn = document.querySelector(".question-btn")
-//     questionBtn.addEventListener("click",function(event){
-//     target = event.target.getAttribute("buttonid");
-//     console.log(target)
-//     return target;
-//     })
-// }
+    
+var questionPressHandler = function(event) {
+    var targetEl = event.target;
+
+    if(targetEl.matches(".question-btn")) {
+        var userChoice = targetEl.getAttribute("buttonId");
+        quizLogic(userChoice);
+    }
+};
+
+var quizLogic = function(userChoice) {
+    if(userChoice === undefined) {
+    } else if(parseInt(userChoice) === questionArr[currentQuestion].answer) {
+        console.log("Correct!")
+        alert("Correct!");
+        scoreAnswers++;
+        nextBtn();
+        
+    } else if (parseInt(userChoice) !== questionArr[currentQuestion].answer) {
+        console.log("Wrong!")
+        alert("Wrong!");
+        scoreTime-=5
+    }
+}
 
 var startQuiz = function() {
+    // Clean quiz parent containers
     quizPrep();
+    // Start timer
     quizTimer();
+    // Gen nav container
     navBtnDiv();
+    // Show quit button
     quitBtn();
-    nextBtn();
     // Generate Questions
     showQuestion();
     // Generate Buttons
     generateButtons();
     // Correct vs Wrong Answer Logic
-    // var questionListener = function () {
-    //     document.querySelector(".question-btn")
-    //     document.addEventListener("click",function(event){
-    //         target = event.target.getAttribute("buttonid");
-    //     return target;
-    //     })
-    // }
-
-    var questionBtns = document.querySelector(".question-btn");
-    // var questionBtnId = document.querySelector("buttonid")
-    questionBtns.onclick = function(event) {
-        // target = event.target.matches(".question-btn");
-        target = event.target.getAttribute("buttonid");
-        console.log(target)
-    }
-            // console.log(questionListener)
-        
-        // if (questionClick === questionArr[currentQuestion].answer) {
-        //     console.log("correct")
-        // }
-        // else {
-        //     console.log("incorrect")
-        // }
+    quizLogic();
 }
-
+                
+                
 startBtnEl.addEventListener("click",function(){
     console.log("click");
     startQuiz();
 });
+
+mainCenterEl.addEventListener("click", questionPressHandler);
