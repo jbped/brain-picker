@@ -6,6 +6,8 @@ var mainCenterEl = document.querySelector('#main-center');
 var mainBottomEl = document.querySelector('#main-bottom');
 var startBtnEl = document.querySelector('#start-btn');
 var flavorTextEl = document.querySelector('#flavor-text');
+var answerFeedbackEl = document.querySelector("#answer-feedback")
+var formDivEl = document.querySelector("#form-handler")
 
 var btnHolder = document.querySelector(".button-holder");
 var questionBtnEl = document.querySelectorAll(".question-btn")
@@ -38,7 +40,7 @@ var questionArr = [
     },
     {
         question: "What does DOM stand for?",
-        answers: 1,
+        answer: 1,
         0: "Display Object Method",
         1: "Document Object Model",
         2: "Display Optional Model",
@@ -56,7 +58,7 @@ var questionArr = [
 
 // Clears content and buttons to prepare page for quiz layout
 var quizPrep = function() {
-    flavorTextEl.textContent = "";
+    flavorTextEl.className = "hidden";
     startBtnEl.remove();
 }
 
@@ -74,6 +76,12 @@ var quitBtn = function() {
     createQuitBtn.textContent = "Quit"
     createQuitBtn.setAttribute("id","quit-btn");
     navBtnDivEl = document.getElementById("nav-btn-div");
+    createQuitBtn.addEventListener("click", function(){
+       
+        if(confirm("Are you sure you would like to quit?")) {
+            window.location.reload()
+        }
+    });
     navBtnDivEl.appendChild(createQuitBtn);
 }
 
@@ -84,10 +92,14 @@ var nextBtn = function() {
     createNextBtn.id = "next-btn";
     navBtnDivEl = document.getElementById("nav-btn-div");
     createNextBtn.addEventListener("click", function(){
-        currentQuestion++;
-        showQuestion();
-        generateButtons();
-        removeButtons();
+        if(currentQuestion < questionArr.length - 1) {
+            currentQuestion++;
+            showQuestion();
+            generateButtons();
+            removeButtons();
+        } else {
+            endQuiz();
+        }
     })
     navBtnDivEl.appendChild(createNextBtn);
 }
@@ -127,26 +139,20 @@ var generateButtons = function () {
 // To be used upon clicking the Next button in the quiz, it will remove the previous generated answer buttons
 var removeButtons = function () {
     var selectBtnDiv = document.querySelector(".button-holder");
-    selectBtnDiv.remove();
+        if (!!selectBtnDiv) {
+            selectBtnDiv.remove();
+        }
     var nextBtnEl = document.querySelector("#next-btn");
-    nextBtnEl.remove();
+        // Checks in next button exists
+        if (!!nextBtnEl) {
+            nextBtnEl.remove();
+        }
 };
 
-// Start Timer
-var quizTimer = function(){
-    setInterval(function(){
-        if(scoreTime > 1) {
-            timerDisplayEl.textContent = scoreTime + " seconds";
-            scoreTime--;
-        } else if (scoreTime === 1) {
-            timerDisplayEl.textContent = scoreTime + " second";
-            scoreTime--;
-        } else {
-            clearInterval(quizTimer)
-            timerDisplayEl.textContent = scoreTime + " seconds";
-        }
-    },1000)
-};
+// // Start Timer
+var quizTimer;
+ 
+
 
     
 var questionPressHandler = function(event) {
@@ -154,30 +160,48 @@ var questionPressHandler = function(event) {
 
     if(targetEl.matches(".question-btn")) {
         var userChoice = targetEl.getAttribute("buttonId");
+        document.querySelectorAll("[class=question-btn]").forEach((function(disable){disable.setAttribute("disabled","true");}));
         quizLogic(userChoice);
     }
 };
 
 var quizLogic = function(userChoice) {
+    // If user has not answered question, wait for response.
     if(userChoice === undefined) {
+    // If user answered question correctly && it was the last question of the quiz, end quiz
+    } else if (parseInt(userChoice) === questionArr[currentQuestion].answer && currentQuestion === questionArr.length - 1){
+        // clearInterval(quizTimer)
+        currentQuestion++
+        console.log("Correct!")
+        alert("Correct!");
+        scoreAnswers++;
+        endQuiz();
+        // If user answered question incorrectly && it was the last question of the quiz, end quiz
+    } else if (parseInt(userChoice) !== questionArr[currentQuestion] && currentQuestion === questionArr.length - 1){
+        // clearInterval(quizTimer)
+        currentQuestion++
+        console.log("Wrong!")
+        alert("Wrong!");
+        scoreTime-=5;
+        endQuiz();
+    // If user answered question correctly && it wasn't the last question of the quiz add points, generate next question button
     } else if(parseInt(userChoice) === questionArr[currentQuestion].answer) {
         console.log("Correct!")
         alert("Correct!");
         scoreAnswers++;
         nextBtn();
-        
+    // If user answered question incorrectly && it wasn't the last question of the quiz subtract time, generate next question button
     } else if (parseInt(userChoice) !== questionArr[currentQuestion].answer) {
         console.log("Wrong!")
         alert("Wrong!");
-        scoreTime-=5
+        scoreTime-=5;
+        nextBtn();
     }
 }
 
 var startQuiz = function() {
     // Clean quiz parent containers
     quizPrep();
-    // Start timer
-    quizTimer();
     // Gen nav container
     navBtnDiv();
     // Show quit button
@@ -189,10 +213,48 @@ var startQuiz = function() {
     // Correct vs Wrong Answer Logic
     quizLogic();
 }
+
+var endQuiz = function() {
+    finalTime = scoreTime; 
+    clearInterval(quizTimer);
+    console.log(finalTime);
+    removeButtons();
+    var removeQuit = document.getElementById("quit-btn")
+        if(!!removeQuit) {
+            removeQuit.remove();
+        }
+    mainTopTitle.textContent = "Quiz Finished";
+    flavorTextEl.className = "show";
+    flavorTextEl.textContent = "You have completed the Brain Picker Quiz with a final time of " + scoreTime + " seconds. You correctly answered " + scoreAnswers + " out of " + questionArr.length + " questions available. Use the form below to save your highscore!";
+    formDivEl.className = "show"
+    // var scoreForm = function() {
+    //     var formDiv = document.createElement("div");
+    //     var hsForm = document.createElement("form");
+    //         hsForm.innerHtml(
+    //             "<label for='initials'>Initials:</label></br> <input type='text' id='initials'"
+    //         )
+    // }
+
+
+}
                 
                 
 startBtnEl.addEventListener("click",function(){
     console.log("click");
+    quizTimer = setInterval(function(){
+        if(scoreTime > 1) {
+            scoreTime--;
+            timerDisplayEl.textContent = scoreTime + " seconds";
+        } else if (scoreTime === 1) {
+            scoreTime--;
+            timerDisplayEl.textContent = scoreTime + " second";
+        } else if (scoreTime === 0) {
+            clearInterval(quizTimer);
+            timerDisplayEl.textContent = scoreTime + " seconds";
+            // quizFinish = "OOT"
+            endQuiz();
+        }
+    },1000);
     startQuiz();
 });
 

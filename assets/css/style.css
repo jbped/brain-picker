@@ -41,3 +41,15 @@ main {
     display: flex;
     flex-flow: column;
 }
+
+.hidden {
+    display:none
+}
+
+.show {
+    display: flex;
+}
+
+div {
+    margin:.5em 0;
+}
