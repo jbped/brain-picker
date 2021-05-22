@@ -6,17 +6,28 @@ var mainCenterEl = document.querySelector('#main-center');
 var mainBottomEl = document.querySelector('#main-bottom');
 var startBtnEl = document.querySelector('#start-btn');
 var flavorTextEl = document.querySelector('#flavor-text');
-var answerFeedbackEl = document.querySelector("#answer-feedback")
-var formDivEl = document.querySelector("#form-handler")
+var answerFeedbackEl = document.querySelector("#answer-feedback");
+var formDivEl = document.querySelector("#form-handler");
+// var initialsInputEl = document.getElementById("initials").value.toUpperCase;
+// var submitFormEl = document.getElementById("sub-score");
 
+// JS Created Elements
 var btnHolder = document.querySelector(".button-holder");
-var questionBtnEl = document.querySelectorAll(".question-btn")
+var questionBtnEl = document.querySelectorAll(".question-btn");
 
 
 // Set Score Values
 scoreTime = 60;
 scoreAnswers = 0;
 currentQuestion = 0;
+
+// Start Timer
+var quizTimer;
+
+// highscore array
+var highscores = [];
+
+
 
 // Questions and Answers Array
 var questionArr = [ 
@@ -148,12 +159,6 @@ var removeButtons = function () {
             nextBtnEl.remove();
         }
 };
-
-// // Start Timer
-var quizTimer;
- 
-
-
     
 var questionPressHandler = function(event) {
     var targetEl = event.target;
@@ -214,6 +219,38 @@ var startQuiz = function() {
     quizLogic();
 }
 
+var createForm = function(){
+    var formDiv = document.createElement("div");
+        formDiv.setAttribute("id", "form-handler");
+    var initialsForm = document.createElement("form");
+    var initialsInput = document.createElement("input");
+        initialsInput.type = "text";
+        initialsInput.name = "initials-input";
+        initialsInput.id = "initials";
+        initialsInput.placeholder = "Enter Initials Here";
+    var initialsSubmit = document.createElement("input");
+        initialsSubmit.type = "submit";
+        initialsSubmit.setAttribute("value", "Save Highscore");
+        initialsSubmit.id = "sub-score";
+    initialsForm.appendChild(initialsInput);
+    initialsForm.appendChild(initialsSubmit);
+    formDiv.appendChild(initialsForm);
+    mainCenterEl.appendChild(formDiv);
+}
+
+var saveHighscores = function(event){
+    event.preventDefault();
+    console.log(event)
+}
+
+var initialSubmitHandler = function (event) {
+    event.preventDefault();
+    var userInitials = document.querySelector("#initials")
+        .value
+        .toUpperCase();
+    console.log(userInitials);
+};
+
 var endQuiz = function() {
     finalTime = scoreTime; 
     clearInterval(quizTimer);
@@ -226,21 +263,28 @@ var endQuiz = function() {
     mainTopTitle.textContent = "Quiz Finished";
     flavorTextEl.className = "show";
     flavorTextEl.textContent = "You have completed the Brain Picker Quiz with a final time of " + scoreTime + " seconds. You correctly answered " + scoreAnswers + " out of " + questionArr.length + " questions available. Use the form below to save your highscore!";
-    formDivEl.className = "show"
-    // var scoreForm = function() {
-    //     var formDiv = document.createElement("div");
-    //     var hsForm = document.createElement("form");
-    //         hsForm.innerHtml(
-    //             "<label for='initials'>Initials:</label></br> <input type='text' id='initials'"
-    //         )
-    // }
-
-
-}
-                
+    createForm();
+    // var formDiv = document.createElement("div");
+    //     formDiv.setAttribute("id", "form-handler");
+    // var initialsForm = document.createElement("form");
+    // var initialsInput = document.createElement("input");
+    //     initialsInput.type = "text";
+    //     initialsInput.name = "initials-input";
+    //     initialsInput.id = "initials";
+    //     initialsInput.placeholder = "Enter Initials Here";
+    // var initialsSubmit = document.createElement("input");
+    //     initialsSubmit.type = "submit";
+    //     initialsSubmit.setAttribute("value", "Save Highscore");
+    //     initialsSubmit.id = "sub-score";
+    // initialsForm.appendChild(initialsInput);
+    // initialsForm.appendChild(initialsSubmit);
+    // formDiv.appendChild(initialsForm);
+    // mainCenterEl.appendChild(formDiv);    
+}              
                 
 startBtnEl.addEventListener("click",function(){
     console.log("click");
+    // Assign quizTimer to setInterval, begin quizTimer
     quizTimer = setInterval(function(){
         if(scoreTime > 1) {
             scoreTime--;
@@ -259,3 +303,4 @@ startBtnEl.addEventListener("click",function(){
 });
 
 mainCenterEl.addEventListener("click", questionPressHandler);
+mainCenterEl.addEventListener("submit", initialSubmitHandler);
