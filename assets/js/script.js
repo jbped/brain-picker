@@ -24,8 +24,7 @@ var questionArr = [
         0: "a semi-colon - ';'",
         1: "a comma - ','",
         2: "a space - '  '",
-        3: "double or single quotes",
-
+        3: "double or single quotes"
     },
     {
         question: "JavasScript is exclusively a client-side programming language",
