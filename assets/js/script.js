@@ -16,19 +16,6 @@ var startCont = document.querySelector("#start-cont")
 var btnHolder = document.querySelector(".button-holder");
 var questionBtnEl = document.querySelectorAll(".question-btn");
 
-
-// Set Score Values
-scoreTime = 60;
-scoreAnswers = 0;
-currentQuestion = 0;
-
-// Start Timer
-var quizTimer;
-
-var highscores =  [];
-
-var highscoreObj = {};
-
 // Questions and Answers Array
 var questionArr = [ 
     {
@@ -85,6 +72,19 @@ var questionArr = [
         1: "False"
     }
 ];
+
+// Set Score Values
+scoreTime = (questionArr.length * 15);
+timerDisplayEl.textContent = scoreTime + " seconds"
+scoreAnswers = 0;
+currentQuestion = 0;
+
+// Start Timer
+var quizTimer;
+
+var highscores =  [];
+
+var highscoreObj = {};
 
 // Create div for quit and next buttons
 var navBtnDiv = function () {
@@ -195,7 +195,10 @@ var questionPressHandler = function(event) {
     if(targetEl.matches(".question-btn")) {
         var userChoice = targetEl.getAttribute("buttonId");
         // After a choice has been made, disable all choice buttons
-        document.querySelectorAll("[class=question-btn]").forEach((function(disable){disable.setAttribute("disabled","true");}));
+        document.querySelectorAll(".question-btn").forEach((function(disable){disable.setAttribute("disabled","true");}));
+        targetEl.classList.add("btn-choice");
+        targetEl.classList.remove("question-btn");
+
         quizLogic(userChoice);
     }
 };
@@ -218,40 +221,41 @@ var quizLogic = function(userChoice) {
         revealWrong();
         currentQuestion++
         console.log("Wrong!")
-        scoreTime-=5;
         let completed = true
         endQuiz(completed);
     // If user answered question correctly && it wasn't the last question of the quiz add points, generate next question button
     } else if(parseInt(userChoice) === questionArr[currentQuestion].answer) {
         revealCorrect();
         console.log("Correct!")
+        scoreTime+=5;
         scoreAnswers++;
         nextBtn();
     // If user answered question incorrectly && it wasn't the last question of the quiz subtract time, generate next question button
     } else if (parseInt(userChoice) !== questionArr[currentQuestion].answer) {
         revealWrong();
         console.log("Wrong!")
-        scoreTime-=5;
+        scoreTime-=10;
         nextBtn();
     }
 }
 
 var revealCorrect = function () {
     var ansDiv = document.createElement("div");
-    var renderResp = document.createElement("h3");
-        renderResp.textContent = "Correct!";
-        renderResp.id = "ans-feedback";
-        renderResp.className = "correct-ans";
-    ansDiv.appendChild(renderResp);
+        ansDiv.innerHTML = "<h3 id='ans-feedback' class='correct-ans'>Correct! <em>+ 5 seconds</em></h3>";
+    // var renderResp = document.createElement("h3");
+    //     renderResp.textContent = "Correct!";
+    //     renderResp.id = "ans-feedback";
+    //     renderResp.className = "correct-ans";
+    // ansDiv.appendChild(renderResp);
     mainBottomEl.appendChild(ansDiv);
 }
 var revealWrong = function () {
     var ansDiv = document.createElement("div");
-    var renderResp = document.createElement("h3");
-        renderResp.textContent = "Wrong!";
-        renderResp.id = "ans-feedback";
-        renderResp.className = "wrong-ans";
-    ansDiv.appendChild(renderResp);
+    ansDiv.innerHTML = "<h3 id='ans-feedback' class='wrong-ans'>Wrong! <em>- 10 seconds</em></h3>";
+    // var renderResp = document.createElement("h3");
+        // renderResp.id = "ans-feedback";
+        // renderResp.className = "wrong-ans";
+    // ansDiv.appendChild(renderResp);
     mainBottomEl.appendChild(ansDiv);
 }
 
