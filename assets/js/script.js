@@ -34,12 +34,17 @@ var questionArr = [
     {
         question: "For loop statements are seperated by  _________.",
         answer: 0,
-        0: "a semi-colon ';'",
-        1: "a comma ','",
-        2: "a space ' '",
+        0: "a semi-colon - ';'",
+        1: "a comma - ','",
+        2: "a space - '  '",
         3: "double or single quotes",
-        4: "Here is another answer"
 
+    },
+    {
+        question: "JavasScript is exclusively a client-side programming language",
+        answer: 1,
+        0: "True",
+        1: "False"
     },
     {
         question: "What is the correct method of creating an array?",
@@ -64,6 +69,20 @@ var questionArr = [
         1: "Snake Case",
         2: "Leet",
         3: "Camel Case"
+    },
+    {
+        question: "Which method is the appropriate way to send a message to the DevTools console?",
+        answer: 3,
+        0: "console.message('lorem ipsum')",
+        1: "console.alert('lorem ipsum')",
+        2: "console.dir('lorem ipsum')",
+        3: "console.log('lorem ipsum')"
+    },
+    {
+        question: "True or False. Math.floor() rounds to the nearest integer.",
+        answer: 1,
+        0: "True",
+        1: "False"
     }
 ];
 
