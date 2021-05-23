@@ -238,26 +238,20 @@ var quizLogic = function(userChoice) {
     }
 }
 
+// Function that generates answer feedback to the most recently answered question
 var revealCorrect = function () {
     var ansDiv = document.createElement("div");
-        ansDiv.innerHTML = "<h3 id='ans-feedback' class='correct-ans'>Correct! <em>+ 5 seconds</em></h3>";
-    // var renderResp = document.createElement("h3");
-    //     renderResp.textContent = "Correct!";
-    //     renderResp.id = "ans-feedback";
-    //     renderResp.className = "correct-ans";
-    // ansDiv.appendChild(renderResp);
+    ansDiv.innerHTML = "<h3 id='ans-feedback' class='correct-ans'>Correct! <em>+ 5 seconds</em></h3>";
     mainBottomEl.appendChild(ansDiv);
 }
+// Function that generates answer feedback to the most recently answered question
 var revealWrong = function () {
     var ansDiv = document.createElement("div");
     ansDiv.innerHTML = "<h3 id='ans-feedback' class='wrong-ans'>Wrong! <em>- 10 seconds</em></h3>";
-    // var renderResp = document.createElement("h3");
-        // renderResp.id = "ans-feedback";
-        // renderResp.className = "wrong-ans";
-    // ansDiv.appendChild(renderResp);
     mainBottomEl.appendChild(ansDiv);
 }
 
+// Id used to remove the answer feedback when called.
 var ansFeedback = function() {
     var ansFdbk = document.getElementById("ans-feedback")
         if(!!ansFdbk) {
@@ -291,12 +285,14 @@ var createForm = function(){
     mainCenterEl.appendChild(formDiv);
 }
 
+// Form for user to provide their initials. 
 var initialSubmitHandler = function (event) {
     event.preventDefault();
     var userInitials = document.querySelector("#initials")
         .value
         .toUpperCase();
     console.log(userInitials);
+    // Min/Max initial length requirment
     if (userInitials > 3 || userInitials < 2) {
         alert("Please provide your initials");
     } else {
@@ -312,6 +308,7 @@ var initialSubmitHandler = function (event) {
 
 };
 
+// When called pulls the highscore arr from localStorage or generates a new blank array if no array was found.
 var loadHighscore = function(){
     highscores = localStorage.getItem("highscores");
     if(!highscores) {
@@ -321,13 +318,16 @@ var loadHighscore = function(){
     }
 }
 
+// When called pushes most recent Highscore to localStorage
 var updateHighscores = function() {
     loadHighscore();
     highscores.push(highscoreObj);
     localStorage.setItem("highscores", JSON.stringify(highscores));
 }
 
+// Highscores Page
 var showHighscores = function() {
+// Remove potential elements from being displayed in highscore page
     ansFeedback();
     removeButtons();
     removeQuit();
@@ -336,9 +336,11 @@ var showHighscores = function() {
     mainCenterEl.innerHTML = "";
     timerDivEl.className = "hidden";
     viewHighscoresEl.className = "hidden";
+    // Sort highscores descending
     highscores.sort(function(a,b) {
         return b.scoreTime - a.scoreTime;
     })
+    // Return to quiz button
     var returnToQuiz = document.createElement("button");
         returnToQuiz.className = "btn-style start-btn";
         returnToQuiz.textContent = "Return to Quiz";
@@ -347,8 +349,9 @@ var showHighscores = function() {
         window.location.reload();
         returnToQuiz.remove();
     })
+
+    // Highscore holder and column headers.
     var highscoreDiv = document.createElement("div");
-        // highscoreDiv.className = "flex-row"
         var colHeadersRow = document.createElement("div");
             colHeadersRow.className = "flex-row header-row-div";
         var placeHeader = document.createElement("h3");
@@ -369,6 +372,7 @@ var showHighscores = function() {
             colHeadersRow.appendChild(correctAnsHeader);
         highscoreDiv.appendChild(colHeadersRow)
 
+     // Render Highscores in a semi-assorted list
     for (var i = 0; i < highscores.length; i++) {
         user = highscores[i];
         var rowDiv = document.createElement("div");
@@ -395,6 +399,7 @@ var showHighscores = function() {
     console.log("Highscores", highscores);
 }
 
+// When called start quiz
 var startQuiz = function() {
     // Clean quiz parent containers
     flavorTextEl.className = "hidden";
@@ -411,6 +416,7 @@ var startQuiz = function() {
     quizLogic();
 }
 
+// End quiz protocol
 var endQuiz = function(completed) {
     finalTime = scoreTime; 
     clearInterval(quizTimer);
@@ -427,6 +433,7 @@ var endQuiz = function(completed) {
     createForm();
 }              
 
+// Start button, starts timer, calls startQuiz
 startBtnEl.addEventListener("click",function(){
     console.log("click");
     // Assign quizTimer to setInterval, begin quizTimer
