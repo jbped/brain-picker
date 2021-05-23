@@ -10,6 +10,7 @@ var flavorTextEl = document.querySelector('#flavor-text');
 var answerFeedbackEl = document.querySelector("#answer-feedback");
 var formDivEl = document.querySelector("#form-handler");
 var viewHighscoresEl = document.querySelector("#highscore");
+var startCont = document.querySelector("#start-cont")
 
 // JS Created Elements
 var btnHolder = document.querySelector(".button-holder");
@@ -76,10 +77,11 @@ var navBtnDiv = function () {
 
 // Create quit button (quit quiz)
 var quitBtn = function() {
+    
     var createQuitBtn = document.createElement('button');
     createQuitBtn.textContent = "Quit";
     createQuitBtn.id = "quit-btn";
-    createQuitBtn.class = "btn-style"
+    createQuitBtn.className = "btn-style nav-btn"
     navBtnDivEl = document.getElementById("nav-btn-div");
     createQuitBtn.addEventListener("click", function(){
        
@@ -95,7 +97,7 @@ var nextBtn = function() {
     var createNextBtn = document.createElement('button');
     createNextBtn.textContent = "Next";
     createNextBtn.id = "next-btn";
-    createNextBtn.class = "btn-style"
+    createNextBtn.className = "btn-style nav-btn"
     navBtnDivEl = document.getElementById("nav-btn-div");
     createNextBtn.addEventListener("click", function(){
         if(currentQuestion < questionArr.length - 1) {
@@ -189,15 +191,17 @@ var quizLogic = function(userChoice) {
         currentQuestion++
         console.log("Correct!");
         scoreAnswers++;
-        endQuiz();
+        let completed = true
+        endQuiz(completed);
         // If user answered question incorrectly && it was the last question of the quiz, end quiz
     } else if (parseInt(userChoice) !== questionArr[currentQuestion] && currentQuestion === questionArr.length - 1){
         // clearInterval(quizTimer)
-        
+        revealWrong();
         currentQuestion++
         console.log("Wrong!")
         scoreTime-=5;
-        endQuiz();
+        let completed = true
+        endQuiz(completed);
     // If user answered question correctly && it wasn't the last question of the quiz add points, generate next question button
     } else if(parseInt(userChoice) === questionArr[currentQuestion].answer) {
         revealCorrect();
@@ -218,7 +222,7 @@ var revealCorrect = function () {
     var renderResp = document.createElement("h3");
         renderResp.textContent = "Correct!";
         renderResp.id = "ans-feedback";
-        renderResp.class = "correct-ans";
+        renderResp.className = "correct-ans";
     ansDiv.appendChild(renderResp);
     mainBottomEl.appendChild(ansDiv);
 }
@@ -227,14 +231,16 @@ var revealWrong = function () {
     var renderResp = document.createElement("h3");
         renderResp.textContent = "Wrong!";
         renderResp.id = "ans-feedback";
-        renderResp.class = "wrong-ans";
+        renderResp.className = "wrong-ans";
     ansDiv.appendChild(renderResp);
     mainBottomEl.appendChild(ansDiv);
 }
 
 var ansFeedback = function() {
     var ansFdbk = document.getElementById("ans-feedback")
-        ansFdbk.remove();
+        if(!!ansFdbk) {
+            ansFdbk.remove();
+        }
 }
 
 //  Create form for entering initials to save with highscore
@@ -253,9 +259,9 @@ var createForm = function(){
     // Create form submit button for input
     var initialsSubmit = document.createElement("input");
         initialsSubmit.type = "submit";
-        initialsSubmit.setAttribute("value", "Save Highscore");
+        initialsSubmit.setAttribute("value", "Submit");
         initialsSubmit.id = "sub-score";
-        initialsSubmit.class = "btn-style"
+        initialsSubmit.className = "btn-style"
     // Append the created elements above
     initialsForm.appendChild(initialsInput);
     initialsForm.appendChild(initialsSubmit);
@@ -306,41 +312,60 @@ var showHighscores = function() {
     loadHighscore();
     mainTopTitle.textContent = "Brain Picker Highscores";
     mainCenterEl.innerHTML = "";
-    timerDivEl.className = "hidden-2";
-    viewHighscoresEl.className = "hidden-2";
+    timerDivEl.className = "hidden";
+    viewHighscoresEl.className = "hidden";
     highscores.sort(function(a,b) {
         return b.scoreTime - a.scoreTime;
     })
     var returnToQuiz = document.createElement("button");
-        returnToQuiz.class = "btn-style";
+        returnToQuiz.className = "btn-style start-btn";
         returnToQuiz.textContent = "Return to Quiz";
-    mainBottomEl.appendChild(returnToQuiz);
+    startCont.appendChild(returnToQuiz);
     returnToQuiz.addEventListener("click", function(){
         window.location.reload();
         returnToQuiz.remove();
     })
     var highscoreDiv = document.createElement("div");
         // highscoreDiv.className = "flex-row"
-        for (var i = 0; i < highscores.length; i++) {
+        var colHeadersRow = document.createElement("div");
+            colHeadersRow.className = "flex-row header-row-div";
+        var placeHeader = document.createElement("h3");
+            placeHeader.textContent = "Place";
+            placeHeader.className = "highscore-place-header";
+            colHeadersRow.appendChild(placeHeader);
+        var initialHeader = document.createElement("h3");
+            initialHeader.textContent = "Initials";
+            initialHeader.className = "highscore-header";
+            colHeadersRow.appendChild(initialHeader);
+        var quizTimeHeader = document.createElement("h3");
+            quizTimeHeader.textContent = "Quiz Time";
+            quizTimeHeader.className = "highscore-header";
+            colHeadersRow.appendChild(quizTimeHeader);
+        var correctAnsHeader = document.createElement("h3");
+            correctAnsHeader.textContent = "Correct Answers";
+            correctAnsHeader.className = "highscore-header";
+            colHeadersRow.appendChild(correctAnsHeader);
+        highscoreDiv.appendChild(colHeadersRow)
+
+    for (var i = 0; i < highscores.length; i++) {
         user = highscores[i];
         var rowDiv = document.createElement("div");
             rowDiv.className = "flex-row row-div";
-
-        var renderPlacing = document.createElement("h3");
+        var renderPlacing = document.createElement("h4");
             renderPlacing.textContent = ((i+1) + ". ");
-            renderPlacing.className = "highscore-list-h3";
+            renderPlacing.className = "highscore-place";
         rowDiv.appendChild(renderPlacing);
-        var renderInitials = document.createElement("h3");
+        var renderInitials = document.createElement("h4");
             renderInitials.textContent = user.initials;
-            renderInitials.className = "highscore-list-h3";
+            renderInitials.className = "highscore-list-h4";
         rowDiv.appendChild(renderInitials);
-        var renderScoreTime = document.createElement("h3");
+        var renderScoreTime = document.createElement("h4");
             renderScoreTime.textContent =user.scoreTime + " seconds";
-            renderScoreTime.className = "highscore-list-h3";
+            renderScoreTime.className = "highscore-list-h4";
         rowDiv.appendChild(renderScoreTime);
-        var renderScoreAnswers = document.createElement("h3");
-            renderScoreAnswers.textContent = user.scoreAnswers;
-            renderScoreAnswers.className = "highscore-list-h3";
+        var renderScoreAnswers = document.createElement("h4");
+            renderScoreAnswers.textContent = user.scoreAnswers + " questions";
+            renderScoreAnswers.className = "highscore-list-h4";
         rowDiv.appendChild(renderScoreAnswers);
         highscoreDiv.appendChild(rowDiv)
     }
@@ -364,13 +389,17 @@ var startQuiz = function() {
     quizLogic();
 }
 
-var endQuiz = function() {
+var endQuiz = function(completed) {
     finalTime = scoreTime; 
     clearInterval(quizTimer);
     console.log(finalTime);
     removeButtons();
     removeQuit();
-    mainTopTitle.textContent = "Quiz Finished";
+    if (completed) {
+        mainTopTitle.textContent = "Well done! You completed the quiz!";
+    } else {
+        mainTopTitle.textContent = "Oh no! You ran out of time!";
+    }
     flavorTextEl.className = "show";
     flavorTextEl.textContent = "You have completed the Brain Picker Quiz with a final time of " + scoreTime + " seconds. You correctly answered " + scoreAnswers + " out of " + questionArr.length + " questions available. Use the form below to save your highscore!";
     createForm();
@@ -390,7 +419,8 @@ startBtnEl.addEventListener("click",function(){
             clearInterval(quizTimer);
             timerDisplayEl.textContent = scoreTime + " seconds";
             // quizFinish = "OOT"
-            endQuiz();
+            let completed = false
+            endQuiz(completed);
         }
     },1000);
     startQuiz();

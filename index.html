@@ -6,18 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brain Picker</title>
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="flex-row">
         <nav id="highscore" class="highscore header-child">
             View Highscores
         </nav>
-        <h1 class="Brain Picker header-child">Brain Picker</h1>
+        <div id="title-con" class="header-child">
+            <h1 class="Brain-Picker  title-primary">Brain<span class="title-secondary">Picker</span></h1>
+        </div>
         <div id="timer" class="timer header-child">Time Remaining: <span id="timer-display">60 seconds</span></div>
     </header>
     <main class="flex-col">
-        <div id="main-top ">
-            <h2 id="main-top-title">Welcome to the Brain Picker JavaScript Quiz</h2>
+        <div id="main-top">
+            <h2 id="main-top-title">Welcome to the BrainPicker JavaScript Quiz!</h2>
         </div>
         <div id="main-center">
             <p id="flavor-text">
@@ -32,7 +36,9 @@
             </div> -->
         </div>
         <div id="main-bottom">
-            <button id="start-btn" class="btn-style">Start the Brain Picker Challenge</button>
+            <div id="start-cont" class= "flex-row">
+                <button id="start-btn" class="btn-style start-btn">Start the Brain Picker Challenge</button>
+            </div>
         </div>
         <div id="answer-feedback"></div>
     </main>
