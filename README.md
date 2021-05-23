@@ -1,5 +1,22 @@
 # Brain Picker
 ## Description
+Take a shot at the <em>Brain</em><strong>Picker</strong> challenge! The quiz is timed, 15 seconds per question. For each correct answer 5 seconds are added to the timer. Opposed to 10 seconds being removed for incorrect answers. 
+
+The question and answers are dynamic. Simply add quiz questions to the quiz by adding them to the the questionArr array using the format below:
+```
+  {
+        question: "Write question out here",
+        answer: 0, // provide the object item position that corresponds with the correct answer
+        0: "a semi-colon - ';'",
+        1: "a comma - ','",
+        2: "a space - '  '",
+        3: "double or single quotes" // Add or remove object items for extending or removing the potential answers
+    },
+```
+
+### Enjoy!
+
+![brainpicker homescreen](https://user-images.githubusercontent.com/76881086/119279562-b9911800-bbe9-11eb-8f20-4ecb4cbadf4a.png)
 
 ## User Story
 
