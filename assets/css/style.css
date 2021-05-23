@@ -3,6 +3,10 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    cursor: default;
+}
+button {
+    cursor: pointer;
 }
 
 .flex-row {
@@ -20,15 +24,30 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.btn-style {
+    margin: .3em .25em;
+    padding: .1em;
+}
+
 /* Header Style ----------------- Start */
 header {
     justify-content: space-between;
     padding: 2em;
+    flex-basis:33%;
 }
 
-header a {
-    text-decoration: none;
+.header-child {
+    flex-basis: 33%;
+    align-items: center;
+    text-align: center;
+    margin: auto;
 }
+
+#highscore {
+    cursor:pointer;
+}
+
+
 /* Header Style ------------------- End */
 main {
     width: 70%;
@@ -54,6 +73,21 @@ main {
     display: flex;
 }
 
-div {
-    margin:.5em 0;
+/* Question Pages --------------- Start */
+.question-btn {
+
+}
+
+.correct-answer {
+    background-color: green;
+}
+
+/* Highscores List -------------- Start */
+.highscore-list-h3 {
+    margin: .25em 0;
+    flex-basis: 25%;
+}
+
+.row-div {
+    flex-wrap: nowrap
 }

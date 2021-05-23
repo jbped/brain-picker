@@ -78,7 +78,8 @@ var navBtnDiv = function () {
 var quitBtn = function() {
     var createQuitBtn = document.createElement('button');
     createQuitBtn.textContent = "Quit";
-    createQuitBtn.setAttribute("id","quit-btn");
+    createQuitBtn.id = "quit-btn";
+    createQuitBtn.class = "btn-style"
     navBtnDivEl = document.getElementById("nav-btn-div");
     createQuitBtn.addEventListener("click", function(){
        
@@ -94,6 +95,7 @@ var nextBtn = function() {
     var createNextBtn = document.createElement('button');
     createNextBtn.textContent = "Next";
     createNextBtn.id = "next-btn";
+    createNextBtn.class = "btn-style"
     navBtnDivEl = document.getElementById("nav-btn-div");
     createNextBtn.addEventListener("click", function(){
         if(currentQuestion < questionArr.length - 1) {
@@ -101,6 +103,7 @@ var nextBtn = function() {
             showQuestion();
             generateButtons();
             removeButtons();
+            ansFeedback();
         } else {
             endQuiz();
         }
@@ -126,7 +129,8 @@ var generateButtons = function () {
             createButton.textContent = questionArr[currentQuestion][i];
             // Set buttonID to be the corresponding answer option used to verify answer
             createButton.setAttribute("buttonId", i);
-            createButton.className = "question-btn";
+            createButton.id = ("q-"+i)
+            createButton.className = "question-btn btn-style";
         // Add button to the buttonHolder div created above
         buttonHolderEl.appendChild(createButton);
     }
@@ -181,6 +185,7 @@ var quizLogic = function(userChoice) {
     // If user answered question correctly && it was the last question of the quiz, end quiz
     } else if (parseInt(userChoice) === questionArr[currentQuestion].answer && currentQuestion === questionArr.length - 1){
         // clearInterval(quizTimer)
+        revealCorrect();
         currentQuestion++
         console.log("Correct!");
         scoreAnswers++;
@@ -188,21 +193,48 @@ var quizLogic = function(userChoice) {
         // If user answered question incorrectly && it was the last question of the quiz, end quiz
     } else if (parseInt(userChoice) !== questionArr[currentQuestion] && currentQuestion === questionArr.length - 1){
         // clearInterval(quizTimer)
+        
         currentQuestion++
         console.log("Wrong!")
         scoreTime-=5;
         endQuiz();
     // If user answered question correctly && it wasn't the last question of the quiz add points, generate next question button
     } else if(parseInt(userChoice) === questionArr[currentQuestion].answer) {
+        revealCorrect();
         console.log("Correct!")
         scoreAnswers++;
         nextBtn();
     // If user answered question incorrectly && it wasn't the last question of the quiz subtract time, generate next question button
     } else if (parseInt(userChoice) !== questionArr[currentQuestion].answer) {
+        revealWrong();
         console.log("Wrong!")
         scoreTime-=5;
         nextBtn();
     }
+}
+
+var revealCorrect = function () {
+    var ansDiv = document.createElement("div");
+    var renderResp = document.createElement("h3");
+        renderResp.textContent = "Correct!";
+        renderResp.id = "ans-feedback";
+        renderResp.class = "correct-ans";
+    ansDiv.appendChild(renderResp);
+    mainBottomEl.appendChild(ansDiv);
+}
+var revealWrong = function () {
+    var ansDiv = document.createElement("div");
+    var renderResp = document.createElement("h3");
+        renderResp.textContent = "Wrong!";
+        renderResp.id = "ans-feedback";
+        renderResp.class = "wrong-ans";
+    ansDiv.appendChild(renderResp);
+    mainBottomEl.appendChild(ansDiv);
+}
+
+var ansFeedback = function() {
+    var ansFdbk = document.getElementById("ans-feedback")
+        ansFdbk.remove();
 }
 
 //  Create form for entering initials to save with highscore
@@ -223,6 +255,7 @@ var createForm = function(){
         initialsSubmit.type = "submit";
         initialsSubmit.setAttribute("value", "Save Highscore");
         initialsSubmit.id = "sub-score";
+        initialsSubmit.class = "btn-style"
     // Append the created elements above
     initialsForm.appendChild(initialsInput);
     initialsForm.appendChild(initialsSubmit);
@@ -265,20 +298,19 @@ var updateHighscores = function() {
     highscores.push(highscoreObj);
     localStorage.setItem("highscores", JSON.stringify(highscores));
 }
-//     console.log("Highscores", highscores)
-// }
 
 var showHighscores = function() {
+    ansFeedback();
     removeButtons();
     removeQuit();
     loadHighscore();
-    highscores.sort(function(a, b) {
-        console.log("Sorted Array", a.scoreTime - b.scoreTime)
-    });
     mainTopTitle.textContent = "Brain Picker Highscores";
     mainCenterEl.innerHTML = "";
     timerDivEl.className = "hidden-2";
     viewHighscoresEl.className = "hidden-2";
+    highscores.sort(function(a,b) {
+        return b.scoreTime - a.scoreTime;
+    })
     var returnToQuiz = document.createElement("button");
         returnToQuiz.class = "btn-style";
         returnToQuiz.textContent = "Return to Quiz";
@@ -287,6 +319,32 @@ var showHighscores = function() {
         window.location.reload();
         returnToQuiz.remove();
     })
+    var highscoreDiv = document.createElement("div");
+        // highscoreDiv.className = "flex-row"
+        for (var i = 0; i < highscores.length; i++) {
+        user = highscores[i];
+        var rowDiv = document.createElement("div");
+            rowDiv.className = "flex-row row-div";
+
+        var renderPlacing = document.createElement("h3");
+            renderPlacing.textContent = ((i+1) + ". ");
+            renderPlacing.className = "highscore-list-h3";
+        rowDiv.appendChild(renderPlacing);
+        var renderInitials = document.createElement("h3");
+            renderInitials.textContent = user.initials;
+            renderInitials.className = "highscore-list-h3";
+        rowDiv.appendChild(renderInitials);
+        var renderScoreTime = document.createElement("h3");
+            renderScoreTime.textContent =user.scoreTime + " seconds";
+            renderScoreTime.className = "highscore-list-h3";
+        rowDiv.appendChild(renderScoreTime);
+        var renderScoreAnswers = document.createElement("h3");
+            renderScoreAnswers.textContent = user.scoreAnswers;
+            renderScoreAnswers.className = "highscore-list-h3";
+        rowDiv.appendChild(renderScoreAnswers);
+        highscoreDiv.appendChild(rowDiv)
+    }
+    mainCenterEl.appendChild(highscoreDiv);
     console.log("Highscores", highscores);
 }
 
