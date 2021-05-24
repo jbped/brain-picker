@@ -332,6 +332,7 @@ var showHighscores = function() {
     removeButtons();
     removeQuit();
     loadHighscore();
+    clearInterval(quizTimer);
     mainTopTitle.textContent = "Brain Picker Highscores";
     mainCenterEl.innerHTML = "";
     timerDivEl.className = "hidden";
