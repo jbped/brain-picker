@@ -1,6 +1,6 @@
 # Brain Picker
 ## Description
-Take a shot at the <em>Brain</em><strong>Picker</strong> challenge! The quiz is timed, 15 seconds per question. For each correct answer 5 seconds are added to the timer. Opposed to 10 seconds being removed for incorrect answers. 
+Take a shot at the [<em>Brain</em><strong>Picker</strong>](https://jbped.github.io/brain-picker/) challenge! The quiz is timed, 15 seconds per question. For each correct answer 5 seconds are added to the timer. Opposed to 10 seconds being removed for incorrect answers. 
 
 The question and answers are dynamic. Simply add quiz questions to the quiz by adding them to the the questionArr array using the format below:
 ```
